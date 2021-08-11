@@ -18,14 +18,13 @@ from study import init_figure, plot_by_method, save_figure, plot_boxplot, plot_t
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--out', action="store", default='screen', choices=['screen', 'png', 'pdf'], help='Output destination')
-parser.add_argument('-m', action="store", nargs='*', default=[], help='Metrics to print')
-parser.add_argument('methods', nargs='*', help='Methods to print')
+parser.add_argument('methods', nargs='*', help='Methods to print', default=['iwkmeans', 'wkmeans', 'margin', 'uncertainty', 'iconfidence', 'random'])
 
 args = parser.parse_args()
 
 
 output = args.out
-metrics = args.m
+metrics = ['accuracy']
 methods = args.methods
 
 del args
@@ -40,10 +39,10 @@ def output_figure(out, dataset, metric, legend_kwargs={}):
     if out == 'screen':
         plt.show()
     elif out == 'png':
-        plt.savefig('{}{}_{}.png'.format(dataset, suffix, metric), bbox_inches='tight', pad_inches=0)
+        plt.savefig('{}_{}.png'.format(dataset, metric), bbox_inches='tight', pad_inches=0)
         plt.close()
     elif out == 'pdf':
-        plt.savefig('{}{}_{}.png'.format(dataset, suffix, metric), bbox_inches='tight', pad_inches=0)
+        plt.savefig('{}_{}.png'.format(dataset, metric), bbox_inches='tight', pad_inches=0)
         plt.close()
 
 
@@ -79,7 +78,7 @@ for name in metrics:
         df = df[~df['value'].isna()]
     
     if not 'n_samples' in df.columns:
-        df['n_samples'] = samples[df['n_iter']]
+        df['n_samples'] = samples[df['n_iter'].astype(int)]
 
     if len(methods) > 0:
         df = df[df['method'].isin(methods)]
@@ -92,30 +91,13 @@ for name in metrics:
     plot_by_method(df, log=(name == 'top_exploration'))
     
     legend_kwargs = {}
-    if name == "accuracy":
-        legend_kwargs['loc'] = 4
-    if name == "top_exploration":
-        pass
-        #plt.xscale('log')
-        #plt.xticks(iters[ds][1:])
-        #plt.gca().get_xaxis().get_major_formatter().labelOnlyBase = False
+    legend_kwargs['loc'] = 4
 
-    if name in ['accuracy', 'hard_contradiction', 'batch_agreement', 'batch_difficulty']:
-        formatter = ticker.FormatStrFormatter('%.2f')
-        plt.gca().yaxis.set_major_formatter(formatter)
+    formatter = ticker.FormatStrFormatter('%.2f')
+    plt.gca().yaxis.set_major_formatter(formatter)
     
-    if name in ['batch_difficulty']:
-        output_figure(output, ds, name, legend_kwargs=None)
-
     output_figure(output, ds, name, legend_kwargs=legend_kwargs)
 
-    # if name == 'accuracy':
-    #     plot_table(df, cumsum=True)
-    # if name == 'noisy_in_selected':
-    #     plot_table(df, last=True, normalize=True)
-    # if name == 'batch_reverse_accuracy':
-    #     plot_table(df, cumsum=True)
-    # if name == 'batch_reverse_score':
-    #     plot_table(df, cumsum=True)
+    plot_table(df, cumsum=True)
 
     plt.close()
