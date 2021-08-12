@@ -95,6 +95,20 @@ for seed, ds in itertools.product(['11', '22', '33', '44', '55'], ['A', 'B']):
     splitter = ActiveLearningSplitter(X.shape[0], test_size=.5, random_state=int(seed))
     index = np.arange(X.shape[0])
 
+    precomputed_proba_path = Path('precomputed_proba') / (seed + ds)
+
+    if not precomputed_proba_path.exists():
+        precomputed_proba_path.mkdir(parents=True)
+        clf = get_clf()
+        fit_clf(clf, X[splitter.test], y[splitter.test], **exp_config.get('full_dataset_fit_params', {}))
+        y_proba = _get_probability_classes(clf, X)
+
+        max_confidence = confidence_score('precomputed', y_proba)
+        np.save(str(precomputed_proba_path / 'max_confidence.npy'), max_confidence)
+        np.save(str(precomputed_proba_path / 'proba.npy'), 1 - max_confidence)
+
+    max_confidence = np.load(str(precomputed_proba_path / 'max_confidence.npy'))
+
     for name in samplers_to_compute:
         print(name)
         
@@ -102,16 +116,6 @@ for seed, ds in itertools.product(['11', '22', '33', '44', '55'], ['A', 'B']):
         if ds == 'B':
             # Exchange -1 and -2
             splitter._mask = -(splitter._mask + 2) - 1
-        
-        y_max_proba_path = Path('y_max_proba_{}{}.npy'.format(seed, ds))
-
-        if not y_max_proba_path.exists():
-            clf = get_clf()
-            fit_clf(clf, X[splitter.test], y[splitter.test])
-            y_proba = _get_probability_classes(clf, X)
-            y_max_proba = y_proba[np.arange(y_proba.shape[0]), y_]
-            np.save(str(y_max_proba_path), y_max_proba)
-        y_max_proba = np.load(str(y_max_proba_path)) 
 
         method = methods[name]
         exp = Experiment(database_path, seed + ds, path=os.path.join(cache_path, name))
@@ -141,7 +145,7 @@ for seed, ds in itertools.product(['11', '22', '33', '44', '55'], ['A', 'B']):
             if name.startswith('iwkmeans'):
                 new_selected_index = sampler.select_samples(X[splitter.non_selected], fixed_cluster_centers=X[splitter.selected])
             elif name.startswith('iconfidence'):
-                new_selected_index = sampler.select_samples(X[splitter.non_selected], y_max_proba[splitter.non_selected])
+                new_selected_index = sampler.select_samples(X[splitter.non_selected], max_confidence[splitter.non_selected])
             else:
                 new_selected_index = sampler.select_samples(X[splitter.non_selected])
 
