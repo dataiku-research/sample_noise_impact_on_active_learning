@@ -17,8 +17,6 @@ datasets = [
 ]
 
 
-accuracies = []
-
 for ds in datasets:
     # Load database
     accuracy = pd.read_csv(str(Path(ds) / 'results' / 'accuracy.csv'))
@@ -31,14 +29,12 @@ for ds in datasets:
     accuracy = accuracy.drop_duplicates(subset=['dataset', 'method', 'seed', 'n_iter'])
     f = lambda x: auc(x['n_iter'], x['value'])
     accuracy = accuracy.groupby(['dataset', 'method', 'seed']).apply(f)
-    accuracies.append(accuracy)
 
-accuracies = pd.concat(accuracies)
+    df = accuracy.unstack(['method']).reset_index()
+    df = df.drop(['dataset', 'seed'], axis=1)
+    df.columns.name = None
 
-# df = accuracies.pivot(columns=['dataset', 'n_samples', 'method'], values = 'value') 
-df = accuracies.unstack(['method'])
+    result = autorank(df)
 
-result = autorank(df)
-
-plot_stats(result)
-plt.savefig('method_ranking.pdf')
+    plot_stats(result)
+    plt.savefig('method_ranking_{}.pdf'.format(ds))
