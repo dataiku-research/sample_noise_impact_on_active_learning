@@ -18,7 +18,7 @@ from study import init_figure, plot_by_method, save_figure, plot_boxplot, plot_t
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--out', action="store", default='screen', choices=['screen', 'png', 'pdf'], help='Output destination')
-parser.add_argument('methods', nargs='*', help='Methods to print', default=['iwkmeans', 'wkmeans', 'margin', 'uncertainty', 'iconfidence', 'random'])
+parser.add_argument('methods', nargs='*', help='Methods to print', default=['iwkmeans', 'wkmeans', 'kcenter', 'uncertainty', 'iconfidence', 'random'])
 
 args = parser.parse_args()
 
@@ -72,6 +72,8 @@ for name in metrics:
 
     print('Plotting ', name)
     df = pd.read_csv(str(csv_path))
+    print(methods)
+    print(df)
 
     if df['value'].dtype == object:
         df['value'] = pd.to_numeric(df['value'], errors='coerce')

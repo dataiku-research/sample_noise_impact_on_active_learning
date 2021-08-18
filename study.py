@@ -39,6 +39,7 @@ names = {
     # -------------
 
     "random": "Random",
+    "kcenter": "KCenterGreedy",
 
     # Zhdanov
     # -------
@@ -61,6 +62,8 @@ mpl_options = {
     'iconfidence': dict(c=cm.tab10(5), linestyle=(0, (3, 1, 1, 1))),
 
     'wkmeans': dict(c=cm.tab10(2), linestyle='dashed'),
+    'iwkmeans': dict(c=cm.tab10(3), linestyle='dashed'),
+    'kcenter': dict(c=cm.tab10(4), linestyle='dashed'),
 
     "cifar10": dict(c=cm.tab20(1)),
     "cifar100": dict(c=cm.tab20(3)),
