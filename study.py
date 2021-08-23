@@ -46,6 +46,8 @@ names = {
 
     "wkmeans": "WKMeans",
     "iwkmeans": "IWKMeans",
+
+    'noisy_in_selected': 'Noisy samples in training dataset'
 }
 
 def namify(tag):
@@ -53,17 +55,17 @@ def namify(tag):
 
 # We want to have a uniform selection of style / colors in all plots
 mpl_options = {
-    'random': dict(c=cm.tab10(0), linestyle='solid'),
+    'random': dict(c='gray', linestyle='solid'),
 
     'entropy': dict(c=cm.tab10(1), linestyle='dashed'),
-    'uncertainty': dict(c=cm.tab10(5), linestyle='dashed'),
-    'margin': dict(c=cm.tab10(4), linestyle='dashed'),
+    'uncertainty': dict(c=cm.tab10(4), linestyle='dashed'),
+    'margin': dict(c=cm.tab10(5), linestyle='dashed'),
 
-    'iconfidence': dict(c=cm.tab10(5), linestyle=(0, (3, 1, 1, 1))),
+    'iconfidence': dict(c=cm.tab10(0), linestyle=(0, (3, 1, 1, 1))),
 
     'wkmeans': dict(c=cm.tab10(2), linestyle='dashed'),
     'iwkmeans': dict(c=cm.tab10(3), linestyle='dashed'),
-    'kcenter': dict(c=cm.tab10(4), linestyle='dashed'),
+    'kcenter': dict(c='orangered', linestyle='solid'),
 
     "cifar10": dict(c=cm.tab20(1)),
     "cifar100": dict(c=cm.tab20(3)),

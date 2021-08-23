@@ -18,13 +18,14 @@ from study import init_figure, plot_by_method, save_figure, plot_boxplot, plot_t
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--out', action="store", default='screen', choices=['screen', 'png', 'pdf'], help='Output destination')
+parser.add_argument('-m', action="store", nargs='*', default=['accuracy'], help='Metrics to print')
 parser.add_argument('methods', nargs='*', help='Methods to print', default=['iwkmeans', 'wkmeans', 'kcenter', 'uncertainty', 'iconfidence', 'random'])
 
 args = parser.parse_args()
 
 
 output = args.out
-metrics = ['accuracy']
+metrics = args.m
 methods = args.methods
 
 del args
@@ -42,7 +43,7 @@ def output_figure(out, dataset, metric, legend_kwargs={}):
         plt.savefig('{}_{}.png'.format(dataset, metric), bbox_inches='tight', pad_inches=0)
         plt.close()
     elif out == 'pdf':
-        plt.savefig('{}_{}.png'.format(dataset, metric), bbox_inches='tight', pad_inches=0)
+        plt.savefig('{}_{}.pdf'.format(dataset, metric), bbox_inches='tight', pad_inches=0)
         plt.close()
 
 
@@ -93,7 +94,7 @@ for name in metrics:
     plot_by_method(df, log=(name == 'top_exploration'))
     
     legend_kwargs = {}
-    legend_kwargs['loc'] = 4
+    #legend_kwargs['loc'] = 4
 
     formatter = ticker.FormatStrFormatter('%.2f')
     plt.gca().yaxis.set_major_formatter(formatter)

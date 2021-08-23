@@ -4,13 +4,12 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import keras
-from keras.utils import to_categorical
-from keras.layers import Dropout, Dense, GlobalAveragePooling2D
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling2D
 from keras import Model
-from keras import optimizers, layers
+from tensorflow.keras import optimizers, layers
 from keras.models import Sequential
 from keras.callbacks import EarlyStopping
-from keras.utils import to_categorical
 
 
 def get_config():

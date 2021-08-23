@@ -29,11 +29,11 @@ def get_dataset():
 
 def get_clf():
     import keras
-    from keras.layers import Dropout, Dense, GlobalAveragePooling2D
-    from keras import Model
-    from keras import optimizers, layers
-    from keras.models import Sequential
-    from keras.callbacks import EarlyStopping
+    from tensorflow.keras.layers import Dropout, Dense, GlobalAveragePooling2D
+    from tensorflow.keras import Model
+    from tensorflow.keras import optimizers, layers
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.callbacks import EarlyStopping
     from tensorflow.keras.utils import to_categorical
 
     keras.backend.clear_session()
